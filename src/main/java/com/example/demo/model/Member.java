@@ -1,13 +1,21 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "members")
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String fullName;
     private String email;
     private String phone;
     private LocalDate memberSince;
+    
+    @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
     public Member() {
@@ -70,4 +78,3 @@ public class Member {
         this.status = status;
     }
 }
-

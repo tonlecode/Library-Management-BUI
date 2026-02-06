@@ -32,10 +32,19 @@ public class BooksController {
     @GetMapping
     public String list(
             @RequestParam(name = "q", required = false) String query,
-            @RequestParam(name = "status", required = false) BookStatus status,
+            @RequestParam(name = "status", required = false) String statusStr,
             @RequestParam(name = "category", required = false) String category,
             Model model
     ) {
+        BookStatus status = null;
+        if (statusStr != null && !statusStr.isBlank()) {
+            try {
+                status = BookStatus.valueOf(statusStr);
+            } catch (IllegalArgumentException e) {
+                // Ignore invalid status
+            }
+        }
+        
         List<Book> books = store.listBooks(query, status, category);
 
         model.addAttribute("title", "Books");

@@ -37,9 +37,18 @@ public class MembersController {
     @GetMapping
     public String list(
             @RequestParam(name = "q", required = false) String query,
-            @RequestParam(name = "status", required = false) MemberStatus status,
+            @RequestParam(name = "status", required = false) String statusStr,
             Model model
     ) {
+        MemberStatus status = null;
+        if (statusStr != null && !statusStr.isBlank()) {
+            try {
+                status = MemberStatus.valueOf(statusStr);
+            } catch (IllegalArgumentException e) {
+                // Ignore invalid status
+            }
+        }
+
         List<Member> members = store.listMembers(query, status);
 
         model.addAttribute("title", "Members");

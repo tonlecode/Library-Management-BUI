@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 public enum MemberStatus {
     ACTIVE("Active", "success"),
+    EXPIRED("Expired", "secondary"),
     SUSPENDED("Suspended", "warning"),
     BLOCKED("Blocked", "danger");
 

@@ -1,14 +1,22 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "loans")
 public class Loan {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private Long bookId;
     private Long memberId;
     private LocalDate issuedOn;
     private LocalDate dueOn;
     private LocalDate returnedOn;
+    
+    @Enumerated(EnumType.STRING)
     private LoanStatus status;
 
     public Loan() {
@@ -88,4 +96,3 @@ public class Loan {
         this.status = status;
     }
 }
-

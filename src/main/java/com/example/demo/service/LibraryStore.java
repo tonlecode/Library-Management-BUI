@@ -3,71 +3,67 @@ package com.example.demo.service;
 import com.example.demo.controller.BookForm;
 import com.example.demo.controller.IssueLoanForm;
 import com.example.demo.controller.MemberForm;
-import com.example.demo.model.Book;
-import com.example.demo.model.BookStatus;
-import com.example.demo.model.Loan;
-import com.example.demo.model.LoanStatus;
-import com.example.demo.model.Member;
-import com.example.demo.model.MemberStatus;
+import com.example.demo.model.*;
+import com.example.demo.repository.BookRepository;
+import com.example.demo.repository.LoanRepository;
+import com.example.demo.repository.MemberRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class LibraryStore {
 
-    private final AtomicLong bookSeq = new AtomicLong(1000);
-    private final AtomicLong memberSeq = new AtomicLong(5000);
-    private final AtomicLong loanSeq = new AtomicLong(9000);
+    private final BookRepository bookRepository;
+    private final MemberRepository memberRepository;
+    private final LoanRepository loanRepository;
 
-    private final Map<Long, Book> books = new ConcurrentHashMap<>();
-    private final Map<Long, Member> members = new ConcurrentHashMap<>();
-    private final Map<Long, Loan> loans = new ConcurrentHashMap<>();
+    public LibraryStore(BookRepository bookRepository, MemberRepository memberRepository, LoanRepository loanRepository) {
+        this.bookRepository = bookRepository;
+        this.memberRepository = memberRepository;
+        this.loanRepository = loanRepository;
+    }
 
-    public LibraryStore() {
-        seed();
+    @PostConstruct
+    public void init() {
+        if (bookRepository.count() == 0) {
+            seed();
+        }
     }
 
     public List<Book> listBooks(String query, BookStatus status, String category) {
         String q = normalize(query);
         String cat = normalize(category);
 
-        return books.values().stream()
+        return bookRepository.findAll().stream()
                 .filter(book -> q.isBlank() || matchesBook(book, q))
                 .filter(book -> status == null || book.getStatus() == status)
                 .filter(book -> cat.isBlank() || normalize(book.getCategory()).equals(cat))
                 .sorted(Comparator.comparing(Book::getTitle, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Book::getAuthor, String.CASE_INSENSITIVE_ORDER))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<String> listCategories() {
-        return books.values().stream()
+        return bookRepository.findAll().stream()
                 .map(Book::getCategory)
                 .filter(s -> s != null && !s.isBlank())
                 .map(String::trim)
                 .distinct()
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Optional<Book> findBook(Long id) {
-        return Optional.ofNullable(books.get(id));
+        return bookRepository.findById(id);
     }
 
     public Long createBook(BookForm form) {
-        Long id = bookSeq.incrementAndGet();
         Book book = new Book(
-                id,
+                null, 
                 form.getTitle().trim(),
                 form.getAuthor().trim(),
                 form.getCategory().trim(),
@@ -76,190 +72,249 @@ public class LibraryStore {
                 form.getStatus(),
                 Optional.ofNullable(form.getImageUrl()).orElse("").trim()
         );
-        books.put(id, book);
-        return id;
+        Book saved = bookRepository.save(book);
+        return saved.getId();
     }
 
     public boolean updateBook(Long id, BookForm form) {
-        Book existing = books.get(id);
-        if (existing == null) {
-            return false;
-        }
-
-        existing.setTitle(form.getTitle().trim());
-        existing.setAuthor(form.getAuthor().trim());
-        existing.setCategory(form.getCategory().trim());
-        existing.setIsbn(Optional.ofNullable(form.getIsbn()).orElse("").trim());
-        existing.setYear(form.getYear());
-        existing.setStatus(form.getStatus());
-        existing.setImageUrl(Optional.ofNullable(form.getImageUrl()).orElse("").trim());
-        return true;
+        return bookRepository.findById(id).map(existing -> {
+            existing.setTitle(form.getTitle().trim());
+            existing.setAuthor(form.getAuthor().trim());
+            existing.setCategory(form.getCategory().trim());
+            existing.setIsbn(Optional.ofNullable(form.getIsbn()).orElse("").trim());
+            existing.setYear(form.getYear());
+            existing.setStatus(form.getStatus());
+            existing.setImageUrl(Optional.ofNullable(form.getImageUrl()).orElse("").trim());
+            bookRepository.save(existing);
+            return true;
+        }).orElse(false);
     }
 
     public boolean deleteBook(Long id) {
-        return books.remove(id) != null;
+        if (bookRepository.existsById(id)) {
+            bookRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public List<Member> listMembers(String query, MemberStatus status) {
         String q = normalize(query);
-        return members.values().stream()
+        return memberRepository.findAll().stream()
                 .filter(member -> q.isBlank() || matchesMember(member, q))
                 .filter(member -> status == null || member.getStatus() == status)
                 .sorted(Comparator.comparing(Member::getFullName, String.CASE_INSENSITIVE_ORDER))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Optional<Member> findMember(Long id) {
-        return Optional.ofNullable(members.get(id));
+        return memberRepository.findById(id);
     }
 
     public Long createMember(MemberForm form) {
-        Long id = memberSeq.incrementAndGet();
         Member member = new Member(
-                id,
+                null,
                 form.getFullName().trim(),
                 form.getEmail().trim(),
                 Optional.ofNullable(form.getPhone()).orElse("").trim(),
                 form.getMemberSince(),
                 form.getStatus()
         );
-        members.put(id, member);
-        return id;
+        Member saved = memberRepository.save(member);
+        return saved.getId();
     }
 
     public boolean updateMember(Long id, MemberForm form) {
-        Member existing = members.get(id);
-        if (existing == null) {
-            return false;
-        }
-
-        existing.setFullName(form.getFullName().trim());
-        existing.setEmail(form.getEmail().trim());
-        existing.setPhone(Optional.ofNullable(form.getPhone()).orElse("").trim());
-        existing.setMemberSince(form.getMemberSince());
-        existing.setStatus(form.getStatus());
-        return true;
+        return memberRepository.findById(id).map(existing -> {
+            existing.setFullName(form.getFullName().trim());
+            existing.setEmail(form.getEmail().trim());
+            existing.setPhone(Optional.ofNullable(form.getPhone()).orElse("").trim());
+            existing.setMemberSince(form.getMemberSince());
+            existing.setStatus(form.getStatus());
+            memberRepository.save(existing);
+            return true;
+        }).orElse(false);
     }
 
     public boolean deleteMember(Long id) {
-        return members.remove(id) != null;
+        if (memberRepository.existsById(id)) {
+            memberRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public List<Loan> listLoans() {
         refreshOverdues();
-        return loans.values().stream()
+        return loanRepository.findAll().stream()
                 .sorted(Comparator.comparing(Loan::getIssuedOn).reversed())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Optional<Loan> findLoan(Long id) {
         refreshOverdues();
-        return Optional.ofNullable(loans.get(id));
+        return loanRepository.findById(id);
     }
 
     public Optional<Loan> findActiveLoanForBook(Long bookId) {
         refreshOverdues();
-        return loans.values().stream()
+        return loanRepository.findAll().stream()
                 .filter(l -> l.getBookId().equals(bookId))
                 .filter(l -> l.getStatus() == LoanStatus.ACTIVE || l.getStatus() == LoanStatus.OVERDUE)
                 .findFirst();
     }
 
     public Optional<Long> issueLoan(IssueLoanForm form) {
-        Book book = books.get(form.getBookId());
-        Member member = members.get(form.getMemberId());
-        if (book == null || member == null) {
+        Optional<Book> bookOpt = bookRepository.findById(form.getBookId());
+        Optional<Member> memberOpt = memberRepository.findById(form.getMemberId());
+        
+        if (bookOpt.isEmpty() || memberOpt.isEmpty()) {
             return Optional.empty();
         }
+        Book book = bookOpt.get();
+        Member member = memberOpt.get();
+
         if (book.getStatus() != BookStatus.AVAILABLE) {
             return Optional.empty();
         }
 
         LocalDate today = LocalDate.now();
-        Long id = loanSeq.incrementAndGet();
-        Loan loan = new Loan(id, book.getId(), member.getId(), today, form.getDueOn(), null, LoanStatus.ACTIVE);
-        loans.put(id, loan);
+        Loan loan = new Loan(null, book.getId(), member.getId(), today, form.getDueOn(), null, LoanStatus.ACTIVE);
+        Loan savedLoan = loanRepository.save(loan);
+        
         book.setStatus(BookStatus.CHECKED_OUT);
-        return Optional.of(id);
+        bookRepository.save(book);
+        
+        return Optional.of(savedLoan.getId());
     }
 
     public boolean returnLoan(Long loanId) {
-        Loan loan = loans.get(loanId);
-        if (loan == null) {
+        Optional<Loan> loanOpt = loanRepository.findById(loanId);
+        if (loanOpt.isEmpty()) {
             return false;
         }
+        Loan loan = loanOpt.get();
         if (loan.getStatus() == LoanStatus.RETURNED) {
             return true;
         }
 
         loan.setStatus(LoanStatus.RETURNED);
         loan.setReturnedOn(LocalDate.now());
+        loanRepository.save(loan);
 
-        Book book = books.get(loan.getBookId());
-        if (book != null && book.getStatus() == BookStatus.CHECKED_OUT) {
-            book.setStatus(BookStatus.AVAILABLE);
-        }
+        bookRepository.findById(loan.getBookId()).ifPresent(book -> {
+            if (book.getStatus() == BookStatus.CHECKED_OUT) {
+                book.setStatus(BookStatus.AVAILABLE);
+                bookRepository.save(book);
+            }
+        });
         return true;
     }
 
     public long countBooks() {
-        return books.size();
+        return bookRepository.count();
     }
 
     public long countAvailableBooks() {
-        return books.values().stream().filter(b -> b.getStatus() == BookStatus.AVAILABLE).count();
+        return bookRepository.findAll().stream().filter(b -> b.getStatus() == BookStatus.AVAILABLE).count();
     }
 
     public long countMembers() {
-        return members.size();
+        return memberRepository.count();
     }
 
     public long countActiveLoans() {
         refreshOverdues();
-        return loans.values().stream()
+        return loanRepository.findAll().stream()
                 .filter(l -> l.getStatus() == LoanStatus.ACTIVE || l.getStatus() == LoanStatus.OVERDUE)
                 .count();
     }
 
     public long countOverdueLoans() {
         refreshOverdues();
-        return loans.values().stream()
+        return loanRepository.findAll().stream()
                 .filter(l -> l.getStatus() == LoanStatus.OVERDUE)
                 .count();
     }
 
+    public long countMonthlyLoans() {
+        LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
+        return loanRepository.findAll().stream()
+                .filter(l -> l.getIssuedOn() != null && !l.getIssuedOn().isBefore(startOfMonth))
+                .count();
+    }
+
+    public long countNewMembers() {
+         LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
+         return memberRepository.findAll().stream()
+                .filter(m -> m.getMemberSince() != null && !m.getMemberSince().isBefore(startOfMonth))
+                .count();
+    }
+
+    public List<Map<String, Object>> getTopBooks(int limit) {
+        Map<Long, Long> loanCounts = loanRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Loan::getBookId, Collectors.counting()));
+
+        if (loanCounts.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        long maxCount = loanCounts.values().stream().max(Long::compare).orElse(1L);
+
+        return loanCounts.entrySet().stream()
+                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                .limit(limit)
+                .map(entry -> {
+                    Optional<Book> book = bookRepository.findById(entry.getKey());
+                    if (book.isEmpty()) return null;
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("title", book.get().getTitle());
+                    map.put("author", book.get().getAuthor());
+                    map.put("count", entry.getValue());
+                    map.put("percent", (entry.getValue() * 100) / maxCount);
+                    return map;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
     public List<Book> recentBooks(int limit) {
-        return books.values().stream()
+        return bookRepository.findAll().stream()
                 .sorted(Comparator.comparing(Book::getId).reversed())
                 .limit(limit)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<Loan> overdueLoans(int limit) {
         refreshOverdues();
-        return loans.values().stream()
+        return loanRepository.findAll().stream()
                 .filter(l -> l.getStatus() == LoanStatus.OVERDUE)
                 .sorted(Comparator.comparing(Loan::getDueOn))
                 .limit(limit)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<Book> availableBooks() {
-        return books.values().stream()
+        return bookRepository.findAll().stream()
                 .filter(b -> b.getStatus() == BookStatus.AVAILABLE)
                 .sorted(Comparator.comparing(Book::getTitle, String.CASE_INSENSITIVE_ORDER))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private void refreshOverdues() {
         LocalDate today = LocalDate.now();
-        loans.values().forEach(loan -> {
+        List<Loan> loans = loanRepository.findAll();
+        for (Loan loan : loans) {
             if ((loan.getStatus() == LoanStatus.ACTIVE || loan.getStatus() == LoanStatus.OVERDUE)
                     && loan.getDueOn() != null
                     && loan.getDueOn().isBefore(today)) {
-                loan.setStatus(LoanStatus.OVERDUE);
+                if (loan.getStatus() != LoanStatus.OVERDUE) {
+                    loan.setStatus(LoanStatus.OVERDUE);
+                    loanRepository.save(loan);
+                }
             }
-        });
+        }
     }
 
     private static boolean matchesBook(Book book, String q) {
@@ -281,107 +336,86 @@ public class LibraryStore {
 
     private void seed() {
         // Create Books
-        Long book1 = bookSeq.incrementAndGet();
-        books.put(book1, new Book(book1, "The Great Gatsby", "F. Scott Fitzgerald", "Classic Fiction", "978-0743273565", 1925, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780743273565-L.jpg"));
-
-        Long book2 = bookSeq.incrementAndGet();
-        books.put(book2, new Book(book2, "1984", "George Orwell", "Science Fiction", "978-0451524935", 1949, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg"));
-
-        Long book3 = bookSeq.incrementAndGet();
-        books.put(book3, new Book(book3, "To Kill a Mockingbird", "Harper Lee", "Classic Fiction", "978-0061120084", 1960, BookStatus.CHECKED_OUT, "https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg"));
-
-        Long book4 = bookSeq.incrementAndGet();
-        books.put(book4, new Book(book4, "Pride and Prejudice", "Jane Austen", "Romance", "978-1503290563", 1813, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9781503290563-L.jpg"));
-
-        Long book5 = bookSeq.incrementAndGet();
-        books.put(book5, new Book(book5, "The Hobbit", "J.R.R. Tolkien", "Fantasy", "978-0547928227", 1937, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg"));
-
-        Long book6 = bookSeq.incrementAndGet();
-        books.put(book6, new Book(book6, "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fantasy", "978-0590353427", 1997, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780590353427-L.jpg"));
-
-        Long book7 = bookSeq.incrementAndGet();
-        books.put(book7, new Book(book7, "The Fellowship of the Ring", "J.R.R. Tolkien", "Fantasy", "978-0547928210", 1954, BookStatus.CHECKED_OUT, "https://covers.openlibrary.org/b/isbn/9780547928210-L.jpg"));
-
-        Long book8 = bookSeq.incrementAndGet();
-        books.put(book8, new Book(book8, "Dune", "Frank Herbert", "Science Fiction", "978-0441013593", 1965, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780441013593-L.jpg"));
-
-        Long book9 = bookSeq.incrementAndGet();
-        books.put(book9, new Book(book9, "Clean Code", "Robert C. Martin", "Technology", "978-0132350884", 2008, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg"));
-
-        Long book10 = bookSeq.incrementAndGet();
-        books.put(book10, new Book(book10, "The Pragmatic Programmer", "Andrew Hunt", "Technology", "978-0201616224", 1999, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780201616224-L.jpg"));
-
-        Long book11 = bookSeq.incrementAndGet();
-        books.put(book11, new Book(book11, "Thinking, Fast and Slow", "Daniel Kahneman", "Psychology", "978-0374275631", 2011, BookStatus.CHECKED_OUT, "https://covers.openlibrary.org/b/isbn/9780374275631-L.jpg"));
-
-        Long book12 = bookSeq.incrementAndGet();
-        books.put(book12, new Book(book12, "Sapiens: A Brief History of Humankind", "Yuval Noah Harari", "History", "978-0062316097", 2014, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780062316097-L.jpg"));
-
-        Long book13 = bookSeq.incrementAndGet();
-        books.put(book13, new Book(book13, "Atomic Habits", "James Clear", "Self-Help", "978-0735211292", 2018, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg"));
-
-        Long book14 = bookSeq.incrementAndGet();
-        books.put(book14, new Book(book14, "The Catcher in the Rye", "J.D. Salinger", "Classic Fiction", "978-0316769488", 1951, BookStatus.DAMAGED, "https://covers.openlibrary.org/b/isbn/9780316769488-L.jpg"));
-
-        Long book15 = bookSeq.incrementAndGet();
-        books.put(book15, new Book(book15, "Steve Jobs", "Walter Isaacson", "Biography", "978-1451648539", 2011, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9781451648539-L.jpg"));
-
-        Long book16 = bookSeq.incrementAndGet();
-        books.put(book16, new Book(book16, "The Da Vinci Code", "Dan Brown", "Thriller", "978-0307474278", 2003, BookStatus.LOST, "https://covers.openlibrary.org/b/isbn/9780307474278-L.jpg"));
+        Book b1 = bookRepository.save(new Book(null, "The Great Gatsby", "F. Scott Fitzgerald", "Classic Fiction", "978-0743273565", 1925, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780743273565-L.jpg"));
+        Book b2 = bookRepository.save(new Book(null, "1984", "George Orwell", "Science Fiction", "978-0451524935", 1949, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg"));
+        Book b3 = bookRepository.save(new Book(null, "To Kill a Mockingbird", "Harper Lee", "Classic Fiction", "978-0061120084", 1960, BookStatus.CHECKED_OUT, "https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg"));
+        Book b4 = bookRepository.save(new Book(null, "Pride and Prejudice", "Jane Austen", "Romance", "978-1503290563", 1813, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9781503290563-L.jpg"));
+        Book b5 = bookRepository.save(new Book(null, "The Hobbit", "J.R.R. Tolkien", "Fantasy", "978-0547928227", 1937, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg"));
+        Book b6 = bookRepository.save(new Book(null, "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fantasy", "978-0590353427", 1997, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780590353427-L.jpg"));
+        Book b7 = bookRepository.save(new Book(null, "The Fellowship of the Ring", "J.R.R. Tolkien", "Fantasy", "978-0547928210", 1954, BookStatus.CHECKED_OUT, "https://covers.openlibrary.org/b/isbn/9780547928210-L.jpg"));
+        Book b8 = bookRepository.save(new Book(null, "Dune", "Frank Herbert", "Science Fiction", "978-0441013593", 1965, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780441013593-L.jpg"));
+        Book b9 = bookRepository.save(new Book(null, "Clean Code", "Robert C. Martin", "Technology", "978-0132350884", 2008, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg"));
+        Book b10 = bookRepository.save(new Book(null, "The Pragmatic Programmer", "Andrew Hunt", "Technology", "978-0201616224", 1999, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780201616224-L.jpg"));
+        Book b11 = bookRepository.save(new Book(null, "Thinking, Fast and Slow", "Daniel Kahneman", "Psychology", "978-0374275631", 2011, BookStatus.CHECKED_OUT, "https://covers.openlibrary.org/b/isbn/9780374275631-L.jpg"));
+        Book b12 = bookRepository.save(new Book(null, "Sapiens: A Brief History of Humankind", "Yuval Noah Harari", "History", "978-0062316097", 2014, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780062316097-L.jpg"));
+        Book b13 = bookRepository.save(new Book(null, "Atomic Habits", "James Clear", "Self-Help", "978-0735211292", 2018, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg"));
+        Book b14 = bookRepository.save(new Book(null, "The Catcher in the Rye", "J.D. Salinger", "Classic Fiction", "978-0316769488", 1951, BookStatus.DAMAGED, "https://covers.openlibrary.org/b/isbn/9780316769488-L.jpg"));
+        Book b15 = bookRepository.save(new Book(null, "Steve Jobs", "Walter Isaacson", "Biography", "978-1451648539", 2011, BookStatus.AVAILABLE, "https://covers.openlibrary.org/b/isbn/9781451648539-L.jpg"));
+        Book b16 = bookRepository.save(new Book(null, "The Da Vinci Code", "Dan Brown", "Thriller", "978-0307474278", 2003, BookStatus.LOST, "https://covers.openlibrary.org/b/isbn/9780307474278-L.jpg"));
 
         // Create Members
-        Long member1 = memberSeq.incrementAndGet();
-        members.put(member1, new Member(member1, "Alice Johnson", "alice@example.com", "555-0101", LocalDate.of(2023, 1, 15), MemberStatus.ACTIVE));
+        Member m1 = memberRepository.save(new Member(null, "Alice Johnson", "alice@example.com", "555-0101", LocalDate.of(2023, 1, 15), MemberStatus.ACTIVE));
+        Member m2 = memberRepository.save(new Member(null, "Bob Smith", "bob@example.com", "555-0102", LocalDate.of(2023, 2, 20), MemberStatus.ACTIVE));
+        Member m3 = memberRepository.save(new Member(null, "Charlie Brown", "charlie@example.com", "555-0103", LocalDate.of(2023, 3, 10), MemberStatus.SUSPENDED));
+        Member m4 = memberRepository.save(new Member(null, "Diana Prince", "diana@example.com", "555-0104", LocalDate.of(2022, 5, 12), MemberStatus.ACTIVE));
+        Member m5 = memberRepository.save(new Member(null, "Evan Wright", "evan@example.com", "555-0105", LocalDate.of(2023, 6, 01), MemberStatus.ACTIVE));
+        Member m6 = memberRepository.save(new Member(null, "Fiona Gallagher", "fiona@example.com", "555-0106", LocalDate.of(2023, 7, 15), MemberStatus.BLOCKED));
+        Member m7 = memberRepository.save(new Member(null, "George Martin", "george@example.com", "555-0107", LocalDate.of(2021, 8, 20), MemberStatus.ACTIVE));
+        Member m8 = memberRepository.save(new Member(null, "Hannah Montana", "hannah@example.com", "555-0108", LocalDate.of(2023, 9, 10), MemberStatus.ACTIVE));
 
-        Long member2 = memberSeq.incrementAndGet();
-        members.put(member2, new Member(member2, "Bob Smith", "bob@example.com", "555-0102", LocalDate.of(2023, 2, 20), MemberStatus.ACTIVE));
+        LocalDate today = LocalDate.now();
 
-        Long member3 = memberSeq.incrementAndGet();
-        members.put(member3, new Member(member3, "Charlie Brown", "charlie@example.com", "555-0103", LocalDate.of(2023, 3, 10), MemberStatus.SUSPENDED));
+        // Create Active Loans (preserving original logic)
+        issueLoanSilently(b3.getId(), m1.getId(), today.minusDays(10), today.plusDays(7));
+        issueLoanSilently(b7.getId(), m2.getId(), today.minusDays(10), today.minusDays(2)); // Overdue
+        issueLoanSilently(b11.getId(), m4.getId(), today.minusDays(10), today.plusDays(1));
 
-        Long member4 = memberSeq.incrementAndGet();
-        members.put(member4, new Member(member4, "Diana Prince", "diana@example.com", "555-0104", LocalDate.of(2022, 5, 12), MemberStatus.ACTIVE));
+        // Create Chart Data (Loans issued in last 7 days)
+        // Day -6: 2 loans
+        createReturnedLoan(b1.getId(), m5.getId(), today.minusDays(6));
+        createReturnedLoan(b2.getId(), m7.getId(), today.minusDays(6));
 
-        Long member5 = memberSeq.incrementAndGet();
-        members.put(member5, new Member(member5, "Evan Wright", "evan@example.com", "555-0105", LocalDate.of(2023, 6, 01), MemberStatus.ACTIVE));
+        // Day -5: 1 loan
+        createReturnedLoan(b4.getId(), m8.getId(), today.minusDays(5));
 
-        Long member6 = memberSeq.incrementAndGet();
-        members.put(member6, new Member(member6, "Fiona Gallagher", "fiona@example.com", "555-0106", LocalDate.of(2023, 7, 15), MemberStatus.BLOCKED));
+        // Day -4: 3 loans
+        createReturnedLoan(b5.getId(), m1.getId(), today.minusDays(4));
+        createReturnedLoan(b6.getId(), m2.getId(), today.minusDays(4));
+        createReturnedLoan(b8.getId(), m4.getId(), today.minusDays(4));
 
-        Long member7 = memberSeq.incrementAndGet();
-        members.put(member7, new Member(member7, "George Martin", "george@example.com", "555-0107", LocalDate.of(2021, 8, 20), MemberStatus.ACTIVE));
+        // Day -3: 0 loans (gap)
 
-        Long member8 = memberSeq.incrementAndGet();
-        members.put(member8, new Member(member8, "Hannah Montana", "hannah@example.com", "555-0108", LocalDate.of(2023, 9, 10), MemberStatus.ACTIVE));
+        // Day -2: 2 loans
+        createReturnedLoan(b9.getId(), m5.getId(), today.minusDays(2));
+        createReturnedLoan(b10.getId(), m7.getId(), today.minusDays(2));
 
-        // Create Loans
-        // Active loan (due in future)
-        issueLoanSilently(book3, member1, LocalDate.now().plusDays(7));
-        
-        // Overdue loan (due in past)
-        issueLoanSilently(book7, member2, LocalDate.now().minusDays(2));
+        // Day -1: 1 loan
+        createReturnedLoan(b12.getId(), m8.getId(), today.minusDays(1));
 
-        // Active loan (due soon)
-        issueLoanSilently(book11, member4, LocalDate.now().plusDays(1));
+        // Today: 1 loan (Active, effectively)
+        issueLoanSilently(b13.getId(), m1.getId(), today, today.plusDays(14));
 
-        // Returned Loan (History)
-        Long loanId = loanSeq.incrementAndGet();
-        Loan returnedLoan = new Loan(loanId, book9, member5, LocalDate.now().minusDays(30), LocalDate.now().minusDays(16), LocalDate.now().minusDays(18), LoanStatus.RETURNED);
-        loans.put(loanId, returnedLoan);
+        // Historical Returned Loan
+        loanRepository.save(new Loan(null, b9.getId(), m5.getId(), today.minusDays(30), today.minusDays(16), today.minusDays(18), LoanStatus.RETURNED));
     }
 
-    private void issueLoanSilently(Long bookId, Long memberId, LocalDate dueOn) {
-        Book book = books.get(bookId);
-        Member member = members.get(memberId);
+    private void createReturnedLoan(Long bookId, Long memberId, LocalDate issuedOn) {
+        Loan loan = new Loan(null, bookId, memberId, issuedOn, issuedOn.plusDays(14), issuedOn.plusDays(2), LoanStatus.RETURNED);
+        loanRepository.save(loan);
+    }
+
+    private void issueLoanSilently(Long bookId, Long memberId, LocalDate issuedOn, LocalDate dueOn) {
+        Book book = bookRepository.findById(bookId).orElse(null);
+        Member member = memberRepository.findById(memberId).orElse(null);
+        
         if (book == null || member == null || book.getStatus() != BookStatus.AVAILABLE) {
             return;
         }
 
-        Long id = loanSeq.incrementAndGet();
-        Loan loan = new Loan(id, bookId, memberId, LocalDate.now().minusDays(10), dueOn, null, LoanStatus.ACTIVE);
-        loans.put(id, loan);
+        Loan loan = new Loan(null, bookId, memberId, issuedOn, dueOn, null, LoanStatus.ACTIVE);
+        loanRepository.save(loan);
+        
         book.setStatus(BookStatus.CHECKED_OUT);
-        refreshOverdues();
+        bookRepository.save(book);
     }
 }
-

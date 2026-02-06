@@ -1,15 +1,27 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "books")
 public class Book {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
     private String author;
     private String category;
     private String isbn;
+    
+    @Column(length = 1000)
     private String imageUrl;
+    
+    @Column(name = "publication_year")
     private int year;
+    
+    @Enumerated(EnumType.STRING)
     private BookStatus status;
 
     public Book() {

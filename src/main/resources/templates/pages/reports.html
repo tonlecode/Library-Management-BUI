@@ -8,9 +8,9 @@
             <div class="text-body-secondary">ទិដ្ឋភាពទូទៅនិងការវិភាគទិន្នន័យ។</div>
         </div>
         <div>
-            <button class="btn btn-outline-secondary" type="button">
+            <a class="btn btn-outline-secondary" th:href="@{/reports/download}" target="_blank">
                 <i class="bi bi-download me-1"></i>ទាញយក PDF
-            </button>
+            </a>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
             <div class="card h-100 border-primary border-start border-4">
                 <div class="card-body">
                     <div class="text-body-secondary small text-uppercase fw-semibold">សៀវភៅសរុប</div>
-                    <div class="fs-2 fw-bold text-primary">1,245</div>
+                    <div class="fs-2 fw-bold text-primary" th:text="${totalBooks}">1,245</div>
                     <div class="small text-success"><i class="bi bi-arrow-up"></i> 12% ពីខែមុន</div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div class="card h-100 border-success border-start border-4">
                 <div class="card-body">
                     <div class="text-body-secondary small text-uppercase fw-semibold">ការខ្ចីប្រចាំខែ</div>
-                    <div class="fs-2 fw-bold text-success">85</div>
+                    <div class="fs-2 fw-bold text-success" th:text="${monthlyLoans}">85</div>
                     <div class="small text-success"><i class="bi bi-arrow-up"></i> 5% ពីខែមុន</div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
             <div class="card h-100 border-warning border-start border-4">
                 <div class="card-body">
                     <div class="text-body-secondary small text-uppercase fw-semibold">ហួសកំណត់</div>
-                    <div class="fs-2 fw-bold text-warning">12</div>
+                    <div class="fs-2 fw-bold text-warning" th:text="${overdueLoans}">12</div>
                     <div class="small text-danger"><i class="bi bi-arrow-up"></i> 2 ថ្មី</div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
             <div class="card h-100 border-info border-start border-4">
                 <div class="card-body">
                     <div class="text-body-secondary small text-uppercase fw-semibold">សមាជិកថ្មី</div>
-                    <div class="fs-2 fw-bold text-info">24</div>
+                    <div class="fs-2 fw-bold text-info" th:text="${newMembers}">24</div>
                     <div class="small text-success"><i class="bi bi-arrow-up"></i> 8 ពីសប្តាហ៍មុន</div>
                 </div>
             </div>
@@ -71,25 +71,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="ps-4 fw-medium">Effective Java</td>
-                                <td>Joshua Bloch</td>
-                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar" style="width: 85%"></div></div></td>
+                            <tr th:if="${topBooks == null || topBooks.isEmpty()}">
+                                <td colspan="3" class="text-center p-4 text-body-secondary">មិនមានទិន្នន័យ។</td>
                             </tr>
-                            <tr>
-                                <td class="ps-4 fw-medium">Clean Code</td>
-                                <td>Robert C. Martin</td>
-                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar bg-success" style="width: 75%"></div></div></td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4 fw-medium">The Pragmatic Programmer</td>
-                                <td>Andy Hunt</td>
-                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar bg-info" style="width: 60%"></div></div></td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4 fw-medium">Design Patterns</td>
-                                <td>Erich Gamma</td>
-                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar bg-warning" style="width: 45%"></div></div></td>
+                            <tr th:each="book : ${topBooks}">
+                                <td class="ps-4 fw-medium" th:text="${book.title}">Title</td>
+                                <td th:text="${book.author}">Author</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px; width: 100px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 th:style="'width: ' + ${book.percent} + '%'" 
+                                                 th:aria-valuenow="${book.percent}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="text-body-secondary" th:text="${book.count}"></small>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

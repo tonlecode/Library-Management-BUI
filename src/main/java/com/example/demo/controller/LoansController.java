@@ -35,11 +35,21 @@ public class LoansController {
 
     @GetMapping
     public String list(
-            @RequestParam(name = "status", required = false) LoanStatus status,
+            @RequestParam(name = "status", required = false) String statusStr,
             Model model
     ) {
+        LoanStatus status = null;
+        if (statusStr != null && !statusStr.isBlank()) {
+            try {
+                status = LoanStatus.valueOf(statusStr);
+            } catch (IllegalArgumentException e) {
+                // Ignore invalid status
+            }
+        }
+
+        final LoanStatus finalStatus = status;
         List<Loan> loans = store.listLoans().stream()
-                .filter(l -> status == null || l.getStatus() == status)
+                .filter(l -> finalStatus == null || l.getStatus() == finalStatus)
                 .toList();
         
         Map<Long, Book> booksById = store.listBooks(null, null, null).stream()
