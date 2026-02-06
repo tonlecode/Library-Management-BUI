@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${book.title}">Book title</h1>
+            <div class="text-body-secondary" th:text="${book.author}">Author</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:href="@{/books}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+            <a class="btn btn-outline-primary" th:href="@{'/books/' + ${book.id} + '/edit'}" data-toggle="ajax-modal">
+                <i class="bi bi-pencil me-1"></i>កែប្រែ
+            </a>
+            <form class="d-inline" method="post" th:action="@{'/books/' + ${book.id} + '/delete'}"
+                  data-confirm="តើអ្នកច្បាស់ទេថាចង់លុបសៀវភៅនេះ? ការលុបមិនអាចត្រឡប់វិញបានទេ។">
+                <button class="btn btn-outline-danger" type="submit"
+                        th:disabled="${activeLoan != null}"
+                        th:attr="data-bs-toggle=${activeLoan != null ? 'tooltip' : null},
+                                 title=${activeLoan != null ? 'សូមសងសៀវភៅមុនពេលលុប។' : null}">
+                    <i class="bi bi-trash me-1"></i>លុប
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <span class="badge fs-6"
+              th:classappend="' text-bg-' + ${book.status.bootstrapColor}"
+              th:text="${book.status.label}">Available</span>
+        <span class="badge text-bg-light border" th:text="'លេខកូដ #' + ${book.id}">ID</span>
+        <span class="badge text-bg-light border" th:text="${book.category}">Category</span>
+        <span class="badge text-bg-light border" th:text="${book.year}">Year</span>
+    </div>
+
+    <div th:if="${activeLoan != null}" class="alert alert-warning d-flex flex-column flex-sm-row gap-2 align-items-start align-items-sm-center justify-content-between">
+        <div>
+            <div class="fw-semibold">កំពុងត្រូវបានខ្ចី</div>
+            <div class="small">
+                ថ្ងៃសង <span th:text="${#temporals.format(activeLoan.dueOn, 'dd-MM-yyyy')}">2026-01-01</span>
+                &middot;
+                <a th:href="@{'/members/' + ${activeLoan.memberId}}">
+                    សមាជិក #<span th:text="${activeLoan.memberId}">0</span>
+                </a>
+            </div>
+        </div>
+        <a class="btn btn-sm btn-outline-dark" th:href="@{'/loans/' + ${activeLoan.id}}">
+            មើលការខ្ចី
+        </a>
+    </div>
+
+    <div th:if="${activeLoan == null && book.status.name() == 'AVAILABLE'}" class="alert alert-success d-flex flex-column flex-sm-row gap-2 align-items-start align-items-sm-center justify-content-between">
+        <div>
+            <div class="fw-semibold">អាចខ្ចីបាន</div>
+            <div class="small">បង្កើតការខ្ចីសម្រាប់សមាជិកជាមួយកាលបរិច្ឆេទសង។</div>
+        </div>
+        <a class="btn btn-sm btn-success" th:href="@{/loans/new}" data-toggle="ajax-modal">
+            <i class="bi bi-arrow-up-right-circle me-1"></i>បង្កើតការខ្ចី
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-3 mb-md-0 text-center">
+                    <img th:if="${!#strings.isEmpty(book.imageUrl)}" th:src="${book.imageUrl}"
+                         alt="Cover" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                    <div th:if="${#strings.isEmpty(book.imageUrl)}" class="bg-light border rounded d-flex align-items-center justify-content-center text-secondary mx-auto" style="width: 200px; height: 300px;">
+                        <i class="bi bi-book fs-1"></i>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <h2 class="h6 text-body-secondary mb-3">ព័ត៌មានលម្អិត</h2>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">ចំណងជើង</dt>
+                        <dd class="col-sm-9" th:text="${book.title}">Title</dd>
+
+                        <dt class="col-sm-3">អ្នកនិពន្ធ</dt>
+                        <dd class="col-sm-9" th:text="${book.author}">Author</dd>
+
+                        <dt class="col-sm-3">ប្រភេទ</dt>
+                        <dd class="col-sm-9" th:text="${book.category}">Category</dd>
+
+                        <dt class="col-sm-3">ISBN</dt>
+                        <dd class="col-sm-9" th:text="${#strings.isEmpty(book.isbn) ? '—' : book.isbn}">—</dd>
+
+                        <dt class="col-sm-3">ឆ្នាំបោះពុម្ព</dt>
+                        <dd class="col-sm-9" th:text="${book.year}">2000</dd>
+
+                        <dt class="col-sm-3">ស្ថានភាព</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge"
+                                  th:classappend="' text-bg-' + ${book.status.bootstrapColor}"
+                                  th:text="${book.status.label}">Available</span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section class="h-100 d-flex flex-column overflow-hidden">
+    <div class="page-header mb-3 flex-shrink-0">
+        <div>
+            <h1 th:text="${title}" class="h3 mb-0">ផ្ទាំងគ្រប់គ្រង</h1>
+            <div class="text-body-secondary small">ទិដ្ឋភាពទូទៅនៃសកម្មភាពថ្ងៃនេះ និងសារពើភ័ណ្ឌ</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-sm btn-outline-primary" th:href="@{/books/new}">
+                <i class="bi bi-plus-circle me-1"></i>បញ្ចូលសៀវភៅ
+            </a>
+            <a class="btn btn-sm btn-outline-primary" th:href="@{/members/new}">
+                <i class="bi bi-person-plus me-1"></i>ចុះឈ្មោះសមាជិក
+            </a>
+            <a class="btn btn-sm btn-primary" th:href="@{/loans/new}">
+                <i class="bi bi-arrow-up-right-circle me-1"></i>ខ្ចីសៀវភៅ
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-2 mb-3 flex-shrink-0">
+        <div class="col">
+            <a th:href="@{/books}" class="text-decoration-none text-reset">
+                <div class="card h-100">
+                    <div class="card-body py-2 px-3 d-flex align-items-center">
+                        <div class="stat-icon primary flex-shrink-0" style="width: 2rem; height: 2rem; font-size: 1rem;">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <div class="ms-2">
+                            <div class="stat-value h5 mb-0" th:text="${totalBooks}">0</div>
+                            <div class="stat-label small">សៀវភៅសរុប</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a th:href="@{/books(status='AVAILABLE')}" class="text-decoration-none text-reset">
+                <div class="card h-100">
+                    <div class="card-body py-2 px-3 d-flex align-items-center">
+                        <div class="stat-icon success flex-shrink-0" style="width: 2rem; height: 2rem; font-size: 1rem;">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="ms-2">
+                            <div class="stat-value h5 mb-0" th:text="${availableBooks}">0</div>
+                            <div class="stat-label small">សៀវភៅទំនេរ</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a th:href="@{/members}" class="text-decoration-none text-reset">
+                <div class="card h-100">
+                    <div class="card-body py-2 px-3 d-flex align-items-center">
+                        <div class="stat-icon info flex-shrink-0" style="width: 2rem; height: 2rem; font-size: 1rem;">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="ms-2">
+                            <div class="stat-value h5 mb-0" th:text="${totalMembers}">0</div>
+                            <div class="stat-label small">សមាជិក</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a th:href="@{/loans(status='ACTIVE')}" class="text-decoration-none text-reset">
+                <div class="card h-100">
+                    <div class="card-body py-2 px-3 d-flex align-items-center">
+                        <div class="stat-icon info flex-shrink-0" style="width: 2rem; height: 2rem; font-size: 1rem;">
+                            <i class="bi bi-journal-album"></i>
+                        </div>
+                        <div class="ms-2">
+                            <div class="stat-value h5 mb-0" th:text="${activeLoans}">0</div>
+                            <div class="stat-label small">កំពុងខ្ចី</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a th:href="@{/loans(status='OVERDUE')}" class="text-decoration-none text-reset">
+                <div class="card h-100">
+                    <div class="card-body py-2 px-3 d-flex align-items-center">
+                        <div class="stat-icon flex-shrink-0" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444; width: 2rem; height: 2rem; font-size: 1rem;">
+                            <i class="bi bi-exclamation-circle"></i>
+                        </div>
+                        <div class="ms-2">
+                            <div class="stat-value h5 mb-0 text-danger" th:text="${overdueLoansCount}">0</div>
+                            <div class="stat-label small">ហួសកំណត់</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Area (Flex Fill) -->
+    <div class="row g-2 flex-fill min-vh-0" style="overflow-y: hidden;">
+        <!-- Left Column: Chart + Recent Books -->
+        <div class="col-lg-8 d-flex flex-column h-100 gap-2">
+            <!-- Chart Section (Fixed Height) -->
+            <div class="card flex-shrink-0">
+                <div class="card-body py-2 px-3">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <div>
+                            <span class="fw-semibold small">សៀវភៅដែលបានខ្ចី</span>
+                            <span class="text-body-secondary small ms-1">(៧ថ្ងៃចុងក្រោយ)</span>
+                        </div>
+                    </div>
+                    <div style="height: 100px;">
+                        <canvas id="loanTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Books (Fills remaining space) -->
+            <div class="card flex-fill min-vh-0">
+                <div class="card-header py-2 px-3 d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold small">ទើបតែបញ្ចូលថ្មី</span>
+                    <a class="btn btn-sm btn-link p-0 text-decoration-none small" th:href="@{/books}">មើលទាំងអស់</a>
+                </div>
+                <div class="card-body p-0 overflow-auto">
+                    <table class="table table-sm table-hover mb-0 small">
+                        <thead class="sticky-top bg-white">
+                        <tr>
+                            <th class="ps-3">ចំណងជើង</th>
+                            <th class="d-none d-sm-table-cell">ប្រភេទ</th>
+                            <th class="pe-3">ស្ថានភាព</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${recentBooks == null || #lists.isEmpty(recentBooks)}">
+                            <td colspan="3" class="text-center py-3 text-body-secondary">មិនទាន់មានសៀវភៅនៅឡើយ។</td>
+                        </tr>
+                        <tr th:each="book : ${recentBooks}">
+                            <td class="ps-3">
+                                <a class="text-decoration-none text-dark" th:href="@{'/books/' + ${book.id}}">
+                                    <div class="fw-semibold text-truncate" style="max-width: 200px;" th:text="${book.title}">Book title</div>
+                                    <div class="text-body-secondary" style="font-size: 0.75rem;" th:text="${book.author}">Author</div>
+                                </a>
+                            </td>
+                            <td class="d-none d-sm-table-cell align-middle">
+                                <span class="badge text-bg-light border fw-normal" th:text="${book.category}">Category</span>
+                            </td>
+                            <td class="pe-3 align-middle">
+                                <span class="badge fw-normal"
+                                      th:classappend="' text-bg-' + ${book.status.bootstrapColor}"
+                                      th:text="${book.status.label}">Available</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Quick Links + Overdue Loans -->
+        <div class="col-lg-4 d-flex flex-column h-100 gap-2">
+            <!-- Quick Links -->
+            <div class="card flex-shrink-0">
+                <div class="card-body py-2 px-3">
+                    <div class="fw-semibold small mb-2">តំណរហ័ស</div>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-sm btn-light text-start d-flex align-items-center justify-content-between" th:href="@{/books}">
+                            <span><i class="bi bi-journal-bookmark me-2 text-primary"></i>មើលបញ្ជីសៀវភៅ</span>
+                            <i class="bi bi-chevron-right small text-body-secondary"></i>
+                        </a>
+                        <a class="btn btn-sm btn-light text-start d-flex align-items-center justify-content-between" th:href="@{/members}">
+                            <span><i class="bi bi-people me-2 text-info"></i>មើលបញ្ជីសមាជិក</span>
+                            <i class="bi bi-chevron-right small text-body-secondary"></i>
+                        </a>
+                        <a class="btn btn-sm btn-light text-start d-flex align-items-center justify-content-between" th:href="@{/loans}">
+                            <span><i class="bi bi-arrow-left-right me-2 text-success"></i>មើលប្រវត្តិខ្ចី</span>
+                            <i class="bi bi-chevron-right small text-body-secondary"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overdue Loans (Fills remaining space) -->
+            <div class="card flex-fill min-vh-0">
+                <div class="card-header py-2 px-3 d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold small text-danger">ការខ្ចីដែលហួសកំណត់</span>
+                    <a class="btn btn-sm btn-link p-0 text-decoration-none small" th:href="@{/loans}">មើលទាំងអស់</a>
+                </div>
+                <div class="card-body p-0 overflow-auto">
+                    <table class="table table-sm table-hover mb-0 small">
+                        <thead class="sticky-top bg-white">
+                        <tr>
+                            <th class="ps-3">សៀវភៅ</th>
+                            <th class="pe-3 text-end">កាលបរិច្ឆេទសង</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${overdueLoans == null || #lists.isEmpty(overdueLoans)}">
+                            <td colspan="2" class="text-center py-3 text-body-secondary">មិនមានការខ្ចីហួសកំណត់ទេ។</td>
+                        </tr>
+                        <tr th:each="loan : ${overdueLoans}">
+                            <td class="ps-3">
+                                <a class="text-decoration-none text-dark" th:href="@{'/loans/' + ${loan.id}}">
+                                    <div class="fw-semibold text-truncate" style="max-width: 150px;" 
+                                         th:text="${booksById[loan.bookId] != null ? booksById[loan.bookId].title : ('Book #' + loan.bookId)}">Book</div>
+                                    <div class="text-body-secondary" style="font-size: 0.75rem;"
+                                         th:text="${membersById[loan.memberId] != null ? membersById[loan.memberId].fullName : ('Member #' + loan.memberId)}">Member</div>
+                                </a>
+                            </td>
+                            <td class="pe-3 text-end align-middle text-danger fw-semibold"
+                                th:text="${#temporals.format(loan.dueOn, 'MMM d')}">Jan 1</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script th:src="@{/webjars/chart.js/4.4.3/dist/chart.umd.js}"></script>
+<script th:inline="javascript">
+    (() => {
+        const el = document.getElementById("loanTrendChart");
+        if (!el || typeof Chart === "undefined") return;
+
+        const labels = /*[[${trend.labels}]]*/ [];
+        const values = /*[[${trend.values}]]*/ [];
+
+        new Chart(el, {
+            type: "line",
+            data: {
+                labels,
+                datasets: [{
+                    label: "ការខ្ចី",
+                    data: values,
+                    borderColor: "#0d6efd",
+                    backgroundColor: "rgba(13, 110, 253, 0.15)",
+                    tension: 0.35,
+                    fill: true,
+                    pointRadius: 2,
+                    pointHoverRadius: 4,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { display: false }, // Hide y-axis labels to save space
+                        grid: { display: false }   // Hide grid lines for cleaner look
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { intersect: false, mode: "index" }
+                }
+            }
+        });
+    })();
+</script>
+</html>

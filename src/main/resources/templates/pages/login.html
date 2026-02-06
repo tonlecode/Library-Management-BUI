@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/auth :: layout(~{::section}, ${title}, ~{::script})}">
+<section class="row justify-content-center">
+    <div class="col-sm-10 col-md-7 col-lg-5">
+        <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center gap-2 fs-3 fw-semibold">
+                <i class="bi bi-book-half"></i>
+                <span th:text="${appName}">Libris</span>
+            </div>
+            <div class="text-body-secondary" th:text="${appTagline}">Library Management</div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h1 class="h5 mb-3" th:text="${title}">ចូលប្រើប្រាស់</h1>
+                <p class="text-body-secondary small mb-4">
+                    នេះគ្រាន់តែជាទំព័រសាកល្បង UI ប៉ុណ្ណោះ។ បញ្ចូលឈ្មោះអ្នកប្រើប្រាស់ណាមួយដើម្បីបន្ត។
+                </p>
+
+                <form method="post" th:action="@{/login}" th:object="${loginForm}">
+                    <div class="mb-3">
+                        <label class="form-label" for="username">ឈ្មោះអ្នកប្រើប្រាស់</label>
+                        <input class="form-control" id="username" type="text" th:field="*{username}" autofocus
+                               placeholder="ឧ. បណ្ណារក្ស">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="password">ពាក្យសម្ងាត់</label>
+                        <input class="form-control" id="password" type="password" th:field="*{password}"
+                               placeholder="(មិនត្រូវបានត្រួតពិនិត្យទេ)">
+                        <div class="form-text">ការផ្ទៀងផ្ទាត់មិនត្រូវបានអនុវត្តនៅក្នុងការសាកល្បងនេះទេ។</div>
+                    </div>
+
+                    <button class="btn btn-primary w-100" type="submit">
+                        បន្ត <i class="bi bi-arrow-right-short ms-1"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center small text-body-secondary mt-3">
+            គន្លឹះ៖ សាកល្បង <span class="badge text-bg-light border">Demo Librarian</span>
+        </div>
+    </div>
+</section>
+</html>

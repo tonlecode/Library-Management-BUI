@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">ការខ្ចីសៀវភៅ</h1>
+            <div class="text-body-secondary">តាមដានការខ្ចី និងកាលបរិច្ឆេទសង។</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary" th:href="@{/loans/new}" data-toggle="ajax-modal">
+                <i class="bi bi-arrow-up-right-circle me-1"></i>បង្កើតការខ្ចីថ្មី
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${status == null} ? 'active'" th:href="@{/loans}">ទាំងអស់</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${status != null and status.name() == 'ACTIVE'} ? 'active'" th:href="@{/loans(status='ACTIVE')}">កំពុងខ្ចី</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${status != null and status.name() == 'OVERDUE'} ? 'active'" th:href="@{/loans(status='OVERDUE')}">ហួសកំណត់</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${status != null and status.name() == 'RETURNED'} ? 'active'" th:href="@{/loans(status='RETURNED')}">បានសង</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>លេខកូដ</th>
+                        <th>សៀវភៅ</th>
+                        <th class="d-none d-md-table-cell">សមាជិក</th>
+                        <th class="d-none d-lg-table-cell">ថ្ងៃខ្ចី</th>
+                        <th>ថ្ងៃសង</th>
+                        <th>ស្ថានភាព</th>
+                        <th class="text-end">សកម្មភាព</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${loans == null || #lists.isEmpty(loans)}">
+                        <td colspan="7" class="p-4 text-body-secondary">
+                            មិនទាន់មានការខ្ចីនៅឡើយទេ។
+                            <a th:href="@{/loans/new}">បង្កើតការខ្ចីដំបូង</a>.
+                        </td>
+                    </tr>
+                    <tr th:each="loan : ${loans}">
+                        <td>
+                            <a class="link-underline link-underline-opacity-0" th:href="@{'/loans/' + ${loan.id}}">
+                                <span class="fw-semibold" th:text="'#' + ${loan.id}">#0000</span>
+                            </a>
+                        </td>
+                        <td th:text="${booksById[loan.bookId] != null ? booksById[loan.bookId].title : ('Book #' + loan.bookId)}">Book</td>
+                        <td class="d-none d-md-table-cell"
+                            th:text="${membersById[loan.memberId] != null ? membersById[loan.memberId].fullName : ('Member #' + loan.memberId)}">
+                            Member
+                        </td>
+                        <td class="d-none d-lg-table-cell"
+                            th:text="${#temporals.format(loan.issuedOn, 'dd-MM-yyyy')}">2026-01-01</td>
+                        <td th:text="${#temporals.format(loan.dueOn, 'dd-MM-yyyy')}"
+                            th:classappend="${loan.status.name() == 'OVERDUE'} ? ' text-danger fw-semibold' : ''">
+                            2026-01-01
+                        </td>
+                        <td>
+                            <span class="badge" th:if="${loan.status.name() == 'ACTIVE'}" th:classappend="' text-bg-' + ${loan.status.bootstrapColor}">កំពុងខ្ចី</span>
+                            <span class="badge" th:if="${loan.status.name() == 'OVERDUE'}" th:classappend="' text-bg-' + ${loan.status.bootstrapColor}">ហួសកំណត់</span>
+                            <span class="badge" th:if="${loan.status.name() == 'RETURNED'}" th:classappend="' text-bg-' + ${loan.status.bootstrapColor}">បានសង</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-2">
+                                <a class="btn btn-sm btn-outline-secondary" th:href="@{'/loans/' + ${loan.id}}"
+                                   data-bs-toggle="tooltip" title="មើល">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <form class="d-inline" method="post"
+                                      th:if="${loan.status.name() == 'ACTIVE' || loan.status.name() == 'OVERDUE'}"
+                                      th:action="@{'/loans/' + ${loan.id} + '/return'}"
+                                      data-confirm="តើអ្នកច្បាស់ទេថាចង់កត់ត្រាការសង?">
+                                    <button class="btn btn-sm btn-outline-success" type="submit"
+                                            data-bs-toggle="tooltip" title="សង">
+                                        <i class="bi bi-check2"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

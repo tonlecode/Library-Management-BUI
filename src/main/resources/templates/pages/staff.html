@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">បុគ្គលិក</h1>
+            <div class="text-body-secondary">ក្រុមការងារបណ្ណាល័យ។</div>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="button">
+                <i class="bi bi-person-plus me-1"></i>បន្ថែមបុគ្គលិក
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">ឈ្មោះ</th>
+                        <th>តួនាទី</th>
+                        <th>ទំនាក់ទំនង</th>
+                        <th>ស្ថានភាព</th>
+                        <th class="text-end pe-4">សកម្មភាព</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Mock Data -->
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" 
+                                     style="width: 40px; height: 40px">
+                                    AD
+                                </div>
+                                <div>
+                                    <div class="fw-medium">Admin User</div>
+                                    <div class="small text-body-secondary">បង្កើតនៅ: 01-01-2024</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge text-bg-primary">Administrator</span></td>
+                        <td>
+                            <div><i class="bi bi-envelope me-1 text-body-secondary"></i> admin@libris.com</div>
+                            <div class="small text-body-secondary"><i class="bi bi-telephone me-1"></i> +855 12 345 678</div>
+                        </td>
+                        <td><span class="badge bg-success-subtle text-success">Active</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center fw-bold" 
+                                     style="width: 40px; height: 40px">
+                                    LB
+                                </div>
+                                <div>
+                                    <div class="fw-medium">Librarian One</div>
+                                    <div class="small text-body-secondary">បង្កើតនៅ: 15-02-2024</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge text-bg-info">Librarian</span></td>
+                        <td>
+                            <div><i class="bi bi-envelope me-1 text-body-secondary"></i> lib1@libris.com</div>
+                            <div class="small text-body-secondary"><i class="bi bi-telephone me-1"></i> +855 98 765 432</div>
+                        </td>
+                        <td><span class="badge bg-success-subtle text-success">Active</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold" 
+                                     style="width: 40px; height: 40px">
+                                    IT
+                                </div>
+                                <div>
+                                    <div class="fw-medium">IT Support</div>
+                                    <div class="small text-body-secondary">បង្កើតនៅ: 10-03-2024</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge text-bg-secondary">Support</span></td>
+                        <td>
+                            <div><i class="bi bi-envelope me-1 text-body-secondary"></i> it@libris.com</div>
+                        </td>
+                        <td><span class="badge bg-warning-subtle text-warning">Away</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

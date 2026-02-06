@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">ការកំណត់</h1>
+            <div class="text-body-secondary">គ្រប់គ្រងការកំណត់ប្រព័ន្ធនិងច្បាប់បណ្ណាល័យ។</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="list-group">
+                <a href="#general" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+                    <i class="bi bi-sliders me-2"></i>ទូទៅ
+                </a>
+                <a href="#rules" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-book me-2"></i>ច្បាប់បណ្ណាល័យ
+                </a>
+                <a href="#backup" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-database me-2"></i>Backup & Restore
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="tab-content">
+                <!-- General Settings -->
+                <div class="tab-pane fade show active" id="general">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">ព័ត៌មានបណ្ណាល័យ</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-3 col-form-label">ឈ្មោះបណ្ណាល័យ</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" value="Libris" th:value="${appName}">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-3 col-form-label">ឃ្លាពាក្យស្លោក</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" value="Library Management System" th:value="${appTagline}">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-3 col-form-label">អ៊ីមែលទំនាក់ទំនង</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" value="contact@libris.com">
+                                    </div>
+                                </div>
+                                 <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary">រក្សាទុកការផ្លាស់ប្តូរ</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Library Rules -->
+                <div class="tab-pane fade" id="rules">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">ច្បាប់ខ្ចីសៀវភៅ</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-4 col-form-label">ចំនួនថ្ងៃខ្ចីអតិបរមា</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" value="14">
+                                            <span class="input-group-text">ថ្ងៃ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-4 col-form-label">ចំនួនសៀវភៅខ្ចីអតិបរមា</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" value="5">
+                                            <span class="input-group-text">ក្បាល</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-4 col-form-label">ប្រាក់ពិន័យក្នុងមួយថ្ងៃ</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <span class="input-group-text">៛</span>
+                                            <input type="number" class="form-control" value="500">
+                                            <span class="input-group-text">រៀល</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary">រក្សាទុកច្បាប់</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup & Restore -->
+                <div class="tab-pane fade" id="backup">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="card-title mb-0">បម្រុងទុកទិន្នន័យ (Backup)</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-body-secondary">ទាញយកឯកសារបម្រុងទុកនៃមូលដ្ឋានទិន្នន័យរបស់អ្នកដើម្បីការពារការបាត់បង់ទិន្នន័យ។</p>
+                            <button class="btn btn-outline-primary"><i class="bi bi-download me-2"></i>Download Backup</button>
+                        </div>
+                    </div>
+                     <div class="card mb-4 border-danger">
+                        <div class="card-header bg-danger-subtle text-danger py-3">
+                            <h5 class="card-title mb-0">ស្តារទិន្នន័យ (Restore)</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-body-secondary">ស្តារទិន្នន័យពីឯកសារបម្រុងទុក។ សូមប្រុងប្រយ័ត្ន ទិន្នន័យបច្ចុប្បន្ននឹងត្រូវបានជំនួស។</p>
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" id="backupFile">
+                                <button class="btn btn-outline-danger" type="button">Restore</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

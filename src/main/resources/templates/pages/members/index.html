@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">សមាជិក</h1>
+            <div class="text-body-secondary">ស្វែងរកសមាជិក និងតាមដានការខ្ចី។</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary" th:href="@{/members/new}" data-toggle="ajax-modal">
+                <i class="bi bi-person-plus me-1"></i>ចុះឈ្មោះសមាជិក
+            </a>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <form class="row g-2 align-items-end" method="get" th:action="@{/members}">
+                <div class="col-12 col-lg-7">
+                    <label class="form-label small text-body-secondary" for="q">ស្វែងរក</label>
+                    <input class="form-control" id="q" name="q" type="search" placeholder="ឈ្មោះ, អ៊ីមែល, លេខទូរស័ព្ទ…"
+                           th:value="${q}">
+                </div>
+                <div class="col-8 col-lg-4">
+                    <label class="form-label small text-body-secondary" for="status">ស្ថានភាព</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="" th:selected="${status == null}">គ្រប់ស្ថានភាព</option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:selected="${status == s}"
+                                th:text="${s.label}">Active</option>
+                    </select>
+                </div>
+                <div class="col-4 col-lg-1 d-grid">
+                    <button class="btn btn-outline-primary" type="submit">ស្វែងរក</button>
+                </div>
+                <div class="col-12 d-flex justify-content-between">
+                    <div class="small text-body-secondary"
+                         th:text="${members != null ? (#lists.size(members) + ' លទ្ធផល') : ''}"></div>
+                    <a class="small" th:if="${(q != null && !q.isBlank()) || status != null}" th:href="@{/members}">
+                        ត្រឡប់ដើម
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>សមាជិក</th>
+                        <th class="d-none d-md-table-cell">ទូរស័ព្ទ</th>
+                        <th class="d-none d-lg-table-cell">សមាជិកចាប់ពី</th>
+                        <th>ស្ថានភាព</th>
+                        <th class="text-end">សកម្មភាព</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${members == null || #lists.isEmpty(members)}">
+                        <td colspan="5" class="p-4 text-body-secondary">
+                            មិនមានសមាជិកដែលត្រូវនឹងការស្វែងរកទេ។
+                            <a th:href="@{/members/new}">ចុះឈ្មោះសមាជិកថ្មី</a>.
+                        </td>
+                    </tr>
+                    <tr th:each="member : ${members}">
+                        <td>
+                            <a class="link-underline link-underline-opacity-0" th:href="@{'/members/' + ${member.id}}">
+                                <div class="fw-semibold" th:text="${member.fullName}">Full name</div>
+                                <div class="small text-body-secondary" th:text="${member.email}">email</div>
+                            </a>
+                        </td>
+                        <td class="d-none d-md-table-cell"
+                            th:text="${#strings.isEmpty(member.phone) ? '—' : member.phone}">—</td>
+                        <td class="d-none d-lg-table-cell"
+                            th:text="${#temporals.format(member.memberSince, 'yyyy-MM-dd')}">2026-01-01</td>
+                        <td>
+                            <span class="badge" th:classappend="' text-bg-' + ${member.status.bootstrapColor}"
+                                  th:text="${member.status.label}">Active</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a class="btn btn-outline-secondary" th:href="@{'/members/' + ${member.id}}"
+                                   data-bs-toggle="tooltip" title="View">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a class="btn btn-outline-secondary" th:href="@{'/members/' + ${member.id} + '/edit'}"
+                                   data-bs-toggle="tooltip" title="Edit" data-toggle="ajax-modal">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form class="d-inline" method="post" th:action="@{'/members/' + ${member.id} + '/delete'}"
+                                      data-confirm="Delete this member?">
+                                    <button class="btn btn-outline-danger" type="submit" data-bs-toggle="tooltip" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

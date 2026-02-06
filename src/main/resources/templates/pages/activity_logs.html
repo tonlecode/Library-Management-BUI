@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">កំណត់ត្រាសកម្មភាព</h1>
+            <div class="text-body-secondary">ប្រវត្តិសកម្មភាពនិងការផ្លាស់ប្តូរនៅក្នុងប្រព័ន្ធ។</div>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-download me-1"></i>Export CSV
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0" placeholder="ស្វែងរកសកម្មភាព...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>ប្រភេទសកម្មភាព (ទាំងអស់)</option>
+                        <option value="login">ចូលប្រព័ន្ធ</option>
+                        <option value="create">បង្កើត</option>
+                        <option value="update">កែប្រែ</option>
+                        <option value="delete">លុប</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col">ពេលវេលា</th>
+                            <th scope="col">អ្នកប្រើប្រាស់</th>
+                            <th scope="col">សកម្មភាព</th>
+                            <th scope="col">លម្អិត</th>
+                            <th scope="col">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-nowrap text-body-secondary small">06-Feb-2026 10:30 AM</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 24px; height: 24px; font-size: 0.7rem;">AD</div>
+                                    <span>Admin</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-primary-subtle text-primary">UPDATE</span></td>
+                            <td>បានកែប្រែព័ត៌មានសៀវភៅ "Clean Code"</td>
+                            <td class="text-body-secondary small">192.168.1.10</td>
+                        </tr>
+                        <tr>
+                            <td class="text-nowrap text-body-secondary small">06-Feb-2026 09:15 AM</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 24px; height: 24px; font-size: 0.7rem;">LB</div>
+                                    <span>Librarian</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-success-subtle text-success">CREATE</span></td>
+                            <td>បានបង្កើតសមាជិកថ្មី "Sok Piseth"</td>
+                            <td class="text-body-secondary small">192.168.1.15</td>
+                        </tr>
+                        <tr>
+                            <td class="text-nowrap text-body-secondary small">06-Feb-2026 08:00 AM</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 24px; height: 24px; font-size: 0.7rem;">AD</div>
+                                    <span>Admin</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-info-subtle text-info">LOGIN</span></td>
+                            <td>បានចូលប្រព័ន្ធជោគជ័យ</td>
+                            <td class="text-body-secondary small">192.168.1.10</td>
+                        </tr>
+                         <tr>
+                            <td class="text-nowrap text-body-secondary small">05-Feb-2026 04:45 PM</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 24px; height: 24px; font-size: 0.7rem;">LB</div>
+                                    <span>Librarian</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-warning-subtle text-warning-emphasis">LOAN</span></td>
+                            <td>បានអនុម័តការខ្ចីសៀវភៅសម្រាប់ "Chea Vichea"</td>
+                            <td class="text-body-secondary small">192.168.1.15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-end mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

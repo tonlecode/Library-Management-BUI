@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">ប្រភេទសៀវភៅ</h1>
+            <div class="text-body-secondary">គ្រប់គ្រងចំណាត់ថ្នាក់សៀវភៅ។</div>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="button">
+                <i class="bi bi-plus-circle me-1"></i>បង្កើតប្រភេទថ្មី
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">ឈ្មោះប្រភេទ</th>
+                        <th>ការពិពណ៌នា</th>
+                        <th>ចំនួនសៀវភៅ</th>
+                        <th class="text-end pe-4">សកម្មភាព</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Mock Data -->
+                    <tr>
+                        <td class="ps-4 fw-medium">វិទ្យាសាស្ត្រកុំព្យូទ័រ</td>
+                        <td class="text-body-secondary">សៀវភៅទាក់ទងនឹងការសរសេរកូដ និងបច្ចេកវិទ្យា</td>
+                        <td><span class="badge bg-secondary-subtle text-secondary rounded-pill">124</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-medium">ប្រវត្តិសាស្ត្រ</td>
+                        <td class="text-body-secondary">ប្រវត្តិសាស្ត្រពិភពលោក និងកម្ពុជា</td>
+                        <td><span class="badge bg-secondary-subtle text-secondary rounded-pill">85</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-medium">រឿងនិទាន</td>
+                        <td class="text-body-secondary">រឿងប្រលោមលោក និងអក្សរសិល្ប៍</td>
+                        <td><span class="badge bg-secondary-subtle text-secondary rounded-pill">203</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-medium">ធុរកិច្ច</td>
+                        <td class="text-body-secondary">ការគ្រប់គ្រង ទីផ្សារ និងសេដ្ឋកិច្ច</td>
+                        <td><span class="badge bg-secondary-subtle text-secondary rounded-pill">56</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-body-secondary small">
+            បង្ហាញ 4 ក្នុងចំណោម 4 ប្រភេទ
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

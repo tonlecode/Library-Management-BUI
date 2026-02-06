@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content, pageTitle, pageScripts)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle} != null ? ${pageTitle} + ' • ' + ${appName} : ${appName}">Libris</title>
+
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+
+<div class="app-scroll-container">
+    <main class="container py-4">
+        <th:block th:replace="~{fragments/flash :: flash}"></th:block>
+        <th:block th:replace="${content}"></th:block>
+    </main>
+
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</div>
+
+<div id="app-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/modal.js}"></script>
+<th:block th:replace="${pageScripts}"></th:block>
+</body>
+</html>

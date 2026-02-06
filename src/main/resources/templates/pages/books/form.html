@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">បញ្ចូលសៀវភៅថ្មី</h1>
+            <div class="text-body-secondary">រក្សាកាតាឡុករបស់អ្នកឱ្យត្រឹមត្រូវនិងងាយស្រួលស្វែងរក។</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:if="${formMode == 'edit'}" th:href="@{/books/{id}(id=${bookId})}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+            <a class="btn btn-outline-secondary" th:if="${formMode != 'edit'}" th:href="@{/books}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" th:object="${bookForm}" th:action="@{${actionUrl}}">
+                        <th:block th:replace="~{::formFields}"></th:block>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-check2-circle me-1"></i>រក្សាទុក
+                            </button>
+                            <a class="btn btn-outline-secondary"
+                               th:href="${formMode} == 'edit' ? @{/books/{id}(id=${bookId})} : @{/books}">
+                                បោះបង់
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:fragment="formFields">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        សូមពិនិត្យមើលកន្លែងដែលខុសហើយព្យាយាមម្តងទៀត។
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label" for="title">ចំណងជើង</label>
+            <input class="form-control" id="title" type="text" th:field="*{title}"
+                   th:classappend="${#fields.hasErrors('title')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. Effective Java">
+            <div class="invalid-feedback" th:errors="*{title}">Title error</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="author">អ្នកនិពន្ធ</label>
+            <input class="form-control" id="author" type="text" th:field="*{author}"
+                   th:classappend="${#fields.hasErrors('author')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. Joshua Bloch">
+            <div class="invalid-feedback" th:errors="*{author}">Author error</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="category">ប្រភេទ</label>
+            <input class="form-control" id="category" type="text" th:field="*{category}"
+                   th:classappend="${#fields.hasErrors('category')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. Software">
+            <div class="invalid-feedback" th:errors="*{category}">Category error</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="isbn">លេខ ISBN <span class="text-body-secondary">(មិនចាំបាច់)</span></label>
+            <input class="form-control" id="isbn" type="text" th:field="*{isbn}"
+                   th:classappend="${#fields.hasErrors('isbn')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. 9780134685991">
+            <div class="invalid-feedback" th:errors="*{isbn}">ISBN error</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="imageUrl">តំណរូបភាព <span class="text-body-secondary">(មិនចាំបាច់)</span></label>
+            <input class="form-control" id="imageUrl" type="text" th:field="*{imageUrl}"
+                   th:classappend="${#fields.hasErrors('imageUrl')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. /images/my-book.jpg ឬ https://example.com/cover.jpg">
+            <div class="invalid-feedback" th:errors="*{imageUrl}">Image URL error</div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="year">ឆ្នាំ</label>
+            <input class="form-control" id="year" type="number" min="1400" max="3000"
+                   th:field="*{year}"
+                   th:classappend="${#fields.hasErrors('year')} ? ' is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{year}">Year error</div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="status">ស្ថានភាព</label>
+            <select class="form-select" id="status" th:field="*{status}"
+                    th:classappend="${#fields.hasErrors('status')} ? ' is-invalid' : ''">
+                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}">Available</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{status}">Status error</div>
+        </div>
+    </div>
+</th:block>
+
+<div th:fragment="modalContent">
+    <div class="modal-header">
+        <h5 class="modal-title" th:text="${title}">បញ្ចូលសៀវភៅថ្មី</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" th:object="${bookForm}" th:action="@{${actionUrl}}">
+             <th:block th:replace="~{::formFields}"></th:block>
+             <div class="d-flex justify-content-end gap-2 mt-4">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">បោះបង់</button>
+                <button class="btn btn-primary" type="submit">រក្សាទុក</button>
+             </div>
+        </form>
+    </div>
+</div>
+
+<script></script>
+</html>

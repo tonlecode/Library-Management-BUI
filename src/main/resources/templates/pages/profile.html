@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">ប្រវត្តិរូប</h1>
+            <div class="text-body-secondary">គ្រប់គ្រងព័ត៌មានផ្ទាល់ខ្លួនរបស់អ្នក។</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="rounded-circle bg-secondary-subtle d-inline-flex align-items-center justify-content-center text-secondary fw-bold mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+                        AD
+                    </div>
+                    <h3 class="card-title">Admin User</h3>
+                    <p class="text-body-secondary">Administrator</p>
+                    <span class="badge bg-success-subtle text-success mb-3">Active</span>
+                    
+                    <div class="d-grid gap-2 col-8 mx-auto mt-3">
+                        <button class="btn btn-outline-primary"><i class="bi bi-camera me-2"></i>ផ្លាស់ប្តូររូបភាព</button>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-body-secondary small">
+                    Joined: Jan 01, 2024
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">ព័ត៌មានទូទៅ</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">នាមត្រកូល</label>
+                                <input type="text" class="form-control" value="User">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">នាមខ្លួន</label>
+                                <input type="text" class="form-control" value="Admin">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">អ៊ីមែល</label>
+                            <input type="email" class="form-control" value="admin@library.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">លេខទូរស័ព្ទ</label>
+                            <input type="tel" class="form-control" value="012 345 678">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">អាសយដ្ឋាន</label>
+                            <textarea class="form-control" rows="3">Phnom Penh, Cambodia</textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">រក្សាទុក</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">សុវត្ថិភាព</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+                            <input type="password" class="form-control">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">ពាក្យសម្ងាត់ថ្មី</label>
+                                <input type="password" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-warning text-white">ប្តូរពាក្យសម្ងាត់</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

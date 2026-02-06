@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-3" th:text="${title}">មជ្ឈមណ្ឌលជំនួយ</h1>
+                <p class="lead text-body-secondary">ស្វែងរកចម្លើយចំពោះសំណួរទូទៅ និងរៀនពីរបៀបប្រើប្រាស់ប្រព័ន្ធ។</p>
+                <div class="col-md-6 mx-auto mt-4">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" placeholder="តើអ្នកកំពុងស្វែងរកអ្វី?">
+                        <button class="btn btn-primary" type="button">ស្វែងរក</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4 hover-shadow">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-book fs-2"></i>
+                            </div>
+                            <h5 class="card-title">ការគ្រប់គ្រងសៀវភៅ</h5>
+                            <p class="card-text text-body-secondary">របៀបបន្ថែម កែប្រែ និងលុបសៀវភៅចេញពីប្រព័ន្ធ។</p>
+                            <a href="#" class="btn btn-outline-primary stretched-link">អានបន្ថែម</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4 hover-shadow">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-success-subtle text-success d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-people fs-2"></i>
+                            </div>
+                            <h5 class="card-title">សមាជិក & ការខ្ចី</h5>
+                            <p class="card-text text-body-secondary">ការចុះឈ្មោះសមាជិក និងដំណើរការខ្ចី-សងសៀវភៅ។</p>
+                            <a href="#" class="btn btn-outline-success stretched-link">អានបន្ថែម</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4 hover-shadow">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-warning-subtle text-warning-emphasis d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-gear fs-2"></i>
+                            </div>
+                            <h5 class="card-title">ការកំណត់ប្រព័ន្ធ</h5>
+                            <p class="card-text text-body-secondary">ការកំណត់ច្បាប់បណ្ណាល័យ និងការគ្រប់គ្រងគណនី។</p>
+                            <a href="#" class="btn btn-outline-warning stretched-link">អានបន្ថែម</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-5">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">សំណួរដែលសួរញឹកញាប់ (FAQ)</h4>
+                </div>
+                <div class="card-body">
+                    <div class="accordion accordion-flush" id="accordionFAQ">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne">
+                                    តើធ្វើដូចម្តេចដើម្បីប្តូរពាក្យសម្ងាត់?
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">អ្នកអាចចូលទៅកាន់ទំព័រ "ប្រវត្តិរូប" ហើយជ្រើសរើសផ្នែក "សុវត្ថិភាព" ដើម្បីផ្លាស់ប្តូរពាក្យសម្ងាត់របស់អ្នក។</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo">
+                                    តើខ្ញុំអាចបន្ថែមប្រភេទសៀវភៅថ្មីដោយរបៀបណា?
+                                </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">ចូលទៅកាន់ម៉ឺនុយ "សៀវភៅ" > "ប្រភេទសៀវភៅ" ហើយចុចប៊ូតុង "បង្កើតថ្មី" នៅជ្រុងខាងលើស្តាំ។</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree">
+                                    តើប្រព័ន្ធមានមុខងារ Backup ទិន្នន័យទេ?
+                                </button>
+                            </h2>
+                            <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">បាទ/ចាស អ្នកអាចចូលទៅកាន់ "ការកំណត់" > "ប្រព័ន្ធ" ដើម្បីធ្វើការ Backup ទិន្នន័យរបស់អ្នក។</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-light border text-center p-4" role="alert">
+                <h5 class="alert-heading">នៅតែត្រូវការជំនួយ?</h5>
+                <p>ក្រុមការងារបច្ចេកទេសរបស់យើងរង់ចាំជួយអ្នក។</p>
+                <button class="btn btn-primary"><i class="bi bi-envelope me-2"></i>ទាក់ទងមកយើង</button>
+            </div>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

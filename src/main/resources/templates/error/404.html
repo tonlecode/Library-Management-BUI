@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, 'Not found', ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1>Page not found</h1>
+            <div class="text-body-secondary">
+                The page you requested doesn’t exist or has moved.
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:href="@{/dashboard}">
+                <i class="bi bi-house me-1"></i>Dashboard
+            </a>
+            <a class="btn btn-primary" th:href="@{/books}">
+                Browse books
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row small mb-0">
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9" th:text="${status}">404</dd>
+
+                <dt class="col-sm-3">Path</dt>
+                <dd class="col-sm-9" th:text="${path}">/</dd>
+            </dl>
+        </div>
+    </div>
+</section>
+</html>
+

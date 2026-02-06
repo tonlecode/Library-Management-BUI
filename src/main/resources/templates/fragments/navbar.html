@@ -1,0 +1,181 @@
+<nav class="navbar navbar-expand-lg sticky-top" xmlns:th="http://www.thymeleaf.org"
+     th:fragment="navbar">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/dashboard}">
+            <i class="bi bi-book-half"></i>
+            <span class="fw-semibold">បណ្ណាល័យ</span>
+            <span class="text-body-secondary small d-none d-sm-inline">ប្រព័ន្ធគ្រប់គ្រងបណ្ណាល័យ</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/dashboard}"
+                       th:classappend="${activeNav} == 'dashboard' ? ' active' : ''"
+                       th:attr="aria-current=${activeNav} == 'dashboard' ? 'page' : null">
+                        <i class="bi bi-speedometer2 me-1"></i>ផ្ទាំងគ្រប់គ្រង
+                    </a>
+                </li>
+                
+                <!-- Catalog Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" 
+                       th:classappend="${activeNav} == 'books' ? ' active' : ''" aria-expanded="false">
+                        <i class="bi bi-journal-bookmark me-1"></i>សៀវភៅ
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/books}">
+                                <i class="bi bi-book me-2"></i>សៀវភៅទាំងអស់
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/categories}">
+                                <i class="bi bi-tags me-2"></i>ប្រភេទសៀវភៅ
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/authors}">
+                                <i class="bi bi-person-video me-2"></i>អ្នកនិពន្ធ
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/books/new}" data-toggle="ajax-modal">
+                                <i class="bi bi-plus-circle me-2"></i>បញ្ចូលសៀវភៅថ្មី
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- People Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       th:classappend="${activeNav} == 'members' ? ' active' : ''" aria-expanded="false">
+                        <i class="bi bi-people me-1"></i>សមាជិក
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/members}">
+                                <i class="bi bi-person-vcard me-2"></i>បញ្ជីសមាជិក
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/staff}">
+                                <i class="bi bi-person-badge me-2"></i>បុគ្គលិក
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/members/new}" data-toggle="ajax-modal">
+                                <i class="bi bi-person-plus me-2"></i>ចុះឈ្មោះសមាជិក
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Circulation Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       th:classappend="${activeNav} == 'loans' ? ' active' : ''" aria-expanded="false">
+                        <i class="bi bi-arrow-left-right me-1"></i>ការខ្ចី-សង
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/loans}">
+                                <i class="bi bi-list-check me-2"></i>ប្រវត្តិខ្ចីសៀវភៅ
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/loans(status='OVERDUE')}">
+                                <i class="bi bi-exclamation-circle me-2"></i>សៀវភៅហួសកំណត់
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/fines}">
+                                <i class="bi bi-cash-coin me-2"></i>ការផាកពិន័យ
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/reservations}">
+                                <i class="bi bi-calendar-check me-2"></i>ការកក់សៀវភៅ
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/loans/new}" data-toggle="ajax-modal">
+                                <i class="bi bi-box-arrow-right me-2"></i>ខ្ចីសៀវភៅ
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/reports}"
+                       th:classappend="${activeNav} == 'reports' ? ' active' : ''">
+                        <i class="bi bi-bar-chart me-1"></i>របាយការណ៍
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/scan}"
+                       th:classappend="${activeNav} == 'scan' ? ' active' : ''">
+                        <i class="bi bi-upc-scan me-1"></i>ស្កេន
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                 <li class="nav-item">
+                     <a class="nav-link" th:href="@{/notifications}">
+                         <i class="bi bi-bell"></i>
+                         <span class="badge rounded-pill bg-danger" style="font-size: 0.5rem; vertical-align: top;">3</span>
+                     </a>
+                 </li>
+                 <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 32px; height: 32px">
+                            AD
+                        </div>
+                        <span class="d-none d-lg-inline">Admin</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/profile}">
+                                <i class="bi bi-person me-2"></i>ប្រវត្តិរូប
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/settings}">
+                                <i class="bi bi-gear me-2"></i>ការកំណត់
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/activity-logs}">
+                                <i class="bi bi-clock-history me-2"></i>កំណត់ត្រាសកម្មភាព
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/help}">
+                                <i class="bi bi-question-circle me-2"></i>ជំនួយ
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>ចាកចេញ
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

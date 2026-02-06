@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">ចុះឈ្មោះសមាជិក</h1>
+            <div class="text-body-secondary">រក្សាព័ត៌មានទំនាក់ទំនងសមាជិកឱ្យទាន់សម័យ។</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:if="${formMode == 'edit'}" th:href="@{/members/{id}(id=${memberId})}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+            <a class="btn btn-outline-secondary" th:if="${formMode != 'edit'}" th:href="@{/members}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" th:object="${memberForm}" th:action="@{${actionUrl}}">
+                        <th:block th:replace="~{::formFields}"></th:block>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-check2-circle me-1"></i>រក្សាទុក
+                            </button>
+                            <a class="btn btn-outline-secondary" th:if="${formMode == 'edit'}" th:href="@{/members/{id}(id=${memberId})}">
+                                បោះបង់
+                            </a>
+                            <a class="btn btn-outline-secondary" th:if="${formMode != 'edit'}" th:href="@{/members}">
+                                បោះបង់
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:fragment="formFields">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        សូមពិនិត្យមើលកន្លែងដែលខុសហើយព្យាយាមម្តងទៀត។
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label" for="fullName">ឈ្មោះពេញ</label>
+            <input class="form-control" id="fullName" type="text" th:field="*{fullName}"
+                   th:classappend="${#fields.hasErrors('fullName')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. Ava Johnson">
+            <div class="invalid-feedback" th:errors="*{fullName}">Name error</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="email">អ៊ីមែល</label>
+            <input class="form-control" id="email" type="email" th:field="*{email}"
+                   th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. ava@example.com">
+            <div class="invalid-feedback" th:errors="*{email}">Email error</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="phone">លេខទូរស័ព្ទ <span class="text-body-secondary">(មិនចាំបាច់)</span></label>
+            <input class="form-control" id="phone" type="tel" th:field="*{phone}"
+                   th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid' : ''"
+                   placeholder="ឧ. +1 (555) 012-3456">
+            <div class="invalid-feedback" th:errors="*{phone}">Phone error</div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="memberSince">សមាជិកចាប់ពី</label>
+            <input class="form-control" id="memberSince" type="date" th:field="*{memberSince}"
+                   th:classappend="${#fields.hasErrors('memberSince')} ? ' is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{memberSince}">Date error</div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="status">ស្ថានភាព</label>
+            <select class="form-select" id="status" th:field="*{status}"
+                    th:classappend="${#fields.hasErrors('status')} ? ' is-invalid' : ''">
+                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}">Active</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{status}">Status error</div>
+        </div>
+    </div>
+</th:block>
+
+<div th:fragment="modalContent">
+    <div class="modal-header">
+        <h5 class="modal-title" th:text="${title}">ចុះឈ្មោះសមាជិក</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" th:object="${memberForm}" th:action="@{${actionUrl}}">
+             <th:block th:replace="~{::formFields}"></th:block>
+             <div class="d-flex justify-content-end gap-2 mt-4">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">បោះបង់</button>
+                <button class="btn btn-primary" type="submit">រក្សាទុក</button>
+             </div>
+        </form>
+    </div>
+</div>
+
+<script></script>
+</html>

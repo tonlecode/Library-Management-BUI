@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{})}">
+<section>
+    <div class="container py-5 text-center">
+        <div class="mb-4 text-body-tertiary">
+            <i class="bi" th:classappend="${icon != null ? icon : 'bi-cone-striped'}" style="font-size: 4rem;"></i>
+        </div>
+        <h1 class="display-5 fw-bold text-body-emphasis" th:text="${title}">ចំណងជើងទំព័រ</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4" th:text="${message != null ? message : 'ទំព័រនេះគឺជាផ្នែកមួយនៃការសាកល្បង UI និងមិនទាន់បានដាក់ឱ្យដំណើរការនៅឡើយទេ។'}">
+                ទំព័រនេះគឺជាផ្នែកមួយនៃការសាកល្បង UI និងមិនទាន់បានដាក់ឱ្យដំណើរការនៅឡើយទេ។
+            </p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a th:href="@{/dashboard}" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="bi bi-speedometer2 me-2"></i>ទៅកាន់ផ្ទាំងគ្រប់គ្រង
+                </a>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="history.back()">
+                    ត្រឡប់ក្រោយ
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

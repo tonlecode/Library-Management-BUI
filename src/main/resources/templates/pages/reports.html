@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">របាយការណ៍</h1>
+            <div class="text-body-secondary">ទិដ្ឋភាពទូទៅនិងការវិភាគទិន្នន័យ។</div>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary" type="button">
+                <i class="bi bi-download me-1"></i>ទាញយក PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card h-100 border-primary border-start border-4">
+                <div class="card-body">
+                    <div class="text-body-secondary small text-uppercase fw-semibold">សៀវភៅសរុប</div>
+                    <div class="fs-2 fw-bold text-primary">1,245</div>
+                    <div class="small text-success"><i class="bi bi-arrow-up"></i> 12% ពីខែមុន</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-success border-start border-4">
+                <div class="card-body">
+                    <div class="text-body-secondary small text-uppercase fw-semibold">ការខ្ចីប្រចាំខែ</div>
+                    <div class="fs-2 fw-bold text-success">85</div>
+                    <div class="small text-success"><i class="bi bi-arrow-up"></i> 5% ពីខែមុន</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-warning border-start border-4">
+                <div class="card-body">
+                    <div class="text-body-secondary small text-uppercase fw-semibold">ហួសកំណត់</div>
+                    <div class="fs-2 fw-bold text-warning">12</div>
+                    <div class="small text-danger"><i class="bi bi-arrow-up"></i> 2 ថ្មី</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-info border-start border-4">
+                <div class="card-body">
+                    <div class="text-body-secondary small text-uppercase fw-semibold">សមាជិកថ្មី</div>
+                    <div class="fs-2 fw-bold text-info">24</div>
+                    <div class="small text-success"><i class="bi bi-arrow-up"></i> 8 ពីសប្តាហ៍មុន</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Top Books Table -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">សៀវភៅពេញនិយមប្រចាំខែ</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">ចំណងជើង</th>
+                                <th>អ្នកនិពន្ធ</th>
+                                <th>ចំនួនខ្ចី</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-4 fw-medium">Effective Java</td>
+                                <td>Joshua Bloch</td>
+                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar" style="width: 85%"></div></div></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-medium">Clean Code</td>
+                                <td>Robert C. Martin</td>
+                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar bg-success" style="width: 75%"></div></div></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-medium">The Pragmatic Programmer</td>
+                                <td>Andy Hunt</td>
+                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar bg-info" style="width: 60%"></div></div></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-medium">Design Patterns</td>
+                                <td>Erich Gamma</td>
+                                <td><div class="progress" style="height: 6px; width: 100px;"><div class="progress-bar bg-warning" style="width: 45%"></div></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Distribution -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                 <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">ចំណាត់ថ្នាក់សៀវភៅ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-grow-1">វិទ្យាសាស្ត្រកុំព្យូទ័រ</div>
+                        <div class="fw-bold">45%</div>
+                    </div>
+                    <div class="progress mb-4" style="height: 8px;">
+                        <div class="progress-bar" role="progressbar" style="width: 45%"></div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-grow-1">រឿងនិទាន</div>
+                        <div class="fw-bold">30%</div>
+                    </div>
+                    <div class="progress mb-4" style="height: 8px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 30%"></div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-grow-1">ប្រវត្តិសាស្ត្រ</div>
+                        <div class="fw-bold">15%</div>
+                    </div>
+                    <div class="progress mb-4" style="height: 8px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 15%"></div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-grow-1">ផ្សេងៗ</div>
+                        <div class="fw-bold">10%</div>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 10%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script></script>
+</html>

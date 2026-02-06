@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${title}">បង្កើតការខ្ចីថ្មី</h1>
+            <div class="text-body-secondary">ជ្រើសរើសសៀវភៅដែលទំនេរ, សមាជិក, និងកាលបរិច្ឆេទសង។</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:href="@{/loans}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" th:object="${loanForm}" th:action="@{/loans}">
+                        <th:block th:replace="~{::formFields}"></th:block>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-arrow-up-right-circle me-1"></i>បង្កើតការខ្ចី
+                            </button>
+                            <a class="btn btn-outline-secondary" th:href="@{/loans}">បោះបង់</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:fragment="formFields">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        សូមពិនិត្យមើលកន្លែងដែលខុសហើយព្យាយាមម្តងទៀត។
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label" for="bookId">សៀវភៅ</label>
+            <select class="form-select" id="bookId" th:field="*{bookId}"
+                    th:classappend="${#fields.hasErrors('bookId')} ? ' is-invalid' : ''">
+                <option value="">ជ្រើសរើសសៀវភៅ...</option>
+                <option th:each="book : ${books}" th:value="${book.id}"
+                        th:text="${book.title} + ' — ' + ${book.author}">Book</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{bookId}">Book error</div>
+            <div class="form-text">បង្ហាញតែសៀវភៅដែលមានក្នុងស្តុកប៉ុណ្ណោះ។</div>
+        </div>
+
+        <div class="col-12">
+            <label class="form-label" for="memberId">សមាជិក</label>
+            <select class="form-select" id="memberId" th:field="*{memberId}"
+                    th:classappend="${#fields.hasErrors('memberId')} ? ' is-invalid' : ''">
+                <option value="">ជ្រើសរើសសមាជិក...</option>
+                <option th:each="member : ${members}" th:value="${member.id}"
+                        th:text="${member.fullName} + ' (' + ${member.email} + ')'">Member</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{memberId}">Member error</div>
+        </div>
+
+        <div class="col-12 col-md-5">
+            <label class="form-label" for="dueOn">កាលបរិច្ឆេទសង</label>
+            <input class="form-control" id="dueOn" type="date" th:field="*{dueOn}"
+                   th:classappend="${#fields.hasErrors('dueOn')} ? ' is-invalid' : ''"
+                   th:attr="min=${#temporals.format(today.plusDays(1), 'yyyy-MM-dd')}">
+            <div class="invalid-feedback" th:errors="*{dueOn}">Due date error</div>
+        </div>
+    </div>
+</th:block>
+
+<div th:fragment="modalContent">
+    <div class="modal-header">
+        <h5 class="modal-title" th:text="${title}">បង្កើតការខ្ចីថ្មី</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" th:object="${loanForm}" th:action="@{/loans}">
+             <th:block th:replace="~{::formFields}"></th:block>
+             <div class="d-flex justify-content-end gap-2 mt-4">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">បោះបង់</button>
+                <button class="btn btn-primary" type="submit">បង្កើតការខ្ចី</button>
+             </div>
+        </form>
+    </div>
+</div>
+
+<script></script>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-3" th:text="${title}">ស្កេន Barcode</h1>
+                <p class="lead text-body-secondary">ស្កេនបណ្ណសមាជិក ឬ Barcode សៀវភៅដើម្បីធ្វើប្រតិបត្តិការរហ័ស។</p>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <label for="scannerInput" class="form-label fw-bold">បញ្ចូលលេខកូដ ឬស្កេនទីនេះ</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light"><i class="bi bi-upc-scan"></i></span>
+                            <input type="text" class="form-control" id="scannerInput" placeholder="កំពុងរង់ចាំការស្កេន..." autofocus>
+                            <button class="btn btn-primary" type="button">ស្កេន</button>
+                        </div>
+                        <div class="form-text">ប្រព័ន្ធនឹងស្វែងរកទិន្នន័យដោយស្វ័យប្រវត្តិ។</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-clock-history me-2"></i>ប្រវត្តិស្កេនចុងក្រោយ
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex align-items-center gap-3 py-3">
+                        <div class="bg-success-subtle text-success rounded p-2">
+                            <i class="bi bi-check-circle fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">សៀវភៅត្រូវបានសង</div>
+                            <div class="small text-body-secondary">Clean Code • សងដោយ: Sok Piseth</div>
+                        </div>
+                        <div class="text-body-secondary small">2 នាទីមុន</div>
+                    </div>
+                    <div class="list-group-item d-flex align-items-center gap-3 py-3">
+                        <div class="bg-primary-subtle text-primary rounded p-2">
+                            <i class="bi bi-person fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">សមាជិក</div>
+                            <div class="small text-body-secondary">Chan Thida (MEM-0045) • Active</div>
+                        </div>
+                        <div class="text-body-secondary small">5 នាទីមុន</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    // Simulate auto-focus retention
+    const input = document.getElementById('scannerInput');
+    input.addEventListener('blur', () => {
+        setTimeout(() => input.focus(), 100);
+    });
+</script>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, 'Error', ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1>Something went wrong</h1>
+            <div class="text-body-secondary">
+                <span th:text="${status}">500</span>
+                <span th:text="${error}">Error</span>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:href="@{/dashboard}">
+                <i class="bi bi-house me-1"></i>Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <p class="mb-4" th:text="${message} ?: 'An unexpected error occurred.'">
+                An unexpected error occurred.
+            </p>
+
+            <dl class="row small mb-0">
+                <dt class="col-sm-3">Path</dt>
+                <dd class="col-sm-9" th:text="${path}">/</dd>
+
+                <dt class="col-sm-3">Timestamp</dt>
+                <dd class="col-sm-9" th:text="${timestamp}">—</dd>
+            </dl>
+        </div>
+    </div>
+</section>
+</html>
+

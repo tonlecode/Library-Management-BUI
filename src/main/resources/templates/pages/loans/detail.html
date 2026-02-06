@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/app :: layout(~{::section}, ${title}, ~{::script})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="'ការខ្ចីលេខ #' + ${loan.id}">Loan</h1>
+            <div class="text-body-secondary">
+                ថ្ងៃខ្ចី <span th:text="${#temporals.format(loan.issuedOn, 'dd-MM-yyyy')}">2026-01-01</span>
+                &middot; ថ្ងៃសង <span th:text="${#temporals.format(loan.dueOn, 'dd-MM-yyyy')}">2026-01-01</span>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" th:href="@{/loans}">
+                <i class="bi bi-arrow-left me-1"></i>ត្រឡប់ក្រោយ
+            </a>
+            <form class="d-inline" method="post" th:if="${canReturn}"
+                  th:action="@{'/loans/' + ${loan.id} + '/return'}"
+                  data-confirm="តើអ្នកច្បាស់ទេថាចង់កត់ត្រាការសង?">
+                <button class="btn btn-success" type="submit">
+                    <i class="bi bi-check2-circle me-1"></i>សងសៀវភៅ
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <span class="badge fs-6" th:if="${loan.status.name() == 'ACTIVE'}" th:classappend="' text-bg-' + ${loan.status.bootstrapColor}">កំពុងខ្ចី</span>
+        <span class="badge fs-6" th:if="${loan.status.name() == 'OVERDUE'}" th:classappend="' text-bg-' + ${loan.status.bootstrapColor}">ហួសកំណត់</span>
+        <span class="badge fs-6" th:if="${loan.status.name() == 'RETURNED'}" th:classappend="' text-bg-' + ${loan.status.bootstrapColor}">បានសង</span>
+        
+        <span class="badge text-bg-light border" th:text="'លេខកូដសៀវភៅ ' + ${loan.bookId}">Book ID</span>
+        <span class="badge text-bg-light border" th:text="'លេខកូដសមាជិក ' + ${loan.memberId}">Member ID</span>
+        <span class="badge text-bg-light border" th:if="${loan.returnedOn != null}"
+              th:text="'បានសងនៅ ' + ${#temporals.format(loan.returnedOn, 'dd-MM-yyyy')}">Returned</span>
+    </div>
+
+    <div th:if="${loan.status.name() == 'OVERDUE'}" class="alert alert-danger">
+        <div class="fw-semibold">ហួសកំណត់</div>
+        <div class="small">ការខ្ចីនេះបានហួសកំណត់ហើយ។ សូមសងសៀវភៅឲ្យបានឆាប់តាមដែលអាចធ្វើទៅបាន។</div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h6 text-body-secondary mb-3">សៀវភៅ</h2>
+                    <div th:if="${book == null}" class="text-body-secondary">រកមិនឃើញទិន្នន័យសៀវភៅទេ។</div>
+                    <div th:if="${book != null}">
+                        <a class="link-underline link-underline-opacity-0" th:href="@{'/books/' + ${book.id}}">
+                            <div class="fw-semibold" th:text="${book.title}">Title</div>
+                            <div class="small text-body-secondary" th:text="${book.author}">Author</div>
+                        </a>
+                        <div class="mt-2 d-flex flex-wrap gap-2">
+                            <span class="badge text-bg-light border" th:text="${book.category}">Category</span>
+                            <span class="badge" th:classappend="' text-bg-' + ${book.status.bootstrapColor}"
+                                  th:text="${book.status.label}">Status</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h6 text-body-secondary mb-3">សមាជិក</h2>
+                    <div th:if="${member == null}" class="text-body-secondary">រកមិនឃើញទិន្នន័យសមាជិកទេ។</div>
+                    <div th:if="${member != null}">
+                        <a class="link-underline link-underline-opacity-0" th:href="@{'/members/' + ${member.id}}">
+                            <div class="fw-semibold" th:text="${member.fullName}">Name</div>
+                            <div class="small text-body-secondary" th:text="${member.email}">email</div>
+                        </a>
+                        <div class="mt-2 d-flex flex-wrap gap-2">
+                            <span class="badge" th:classappend="' text-bg-' + ${member.status.bootstrapColor}"
+                                  th:text="${member.status.label}">Status</span>
+                            <span class="badge text-bg-light border"
+                                  th:text="'សមាជិកតាំងពី ' + ${#temporals.format(member.memberSince, 'dd-MM-yyyy')}">
+                                Member since
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>
